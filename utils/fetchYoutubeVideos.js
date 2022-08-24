@@ -27,7 +27,7 @@ module.exports = () => {
             console.log('Cron running', new Date());
             const result = await googleYoutubeApi.search.list(params);
             const videos = result.data.items;
-            console.log(videos.length);
+            console.log(videos);
         } catch (err) {
             // Refreshing the api key on quota exhaustion
             if (
