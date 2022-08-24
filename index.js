@@ -10,6 +10,7 @@ const {
     MONGO_PASSWORD,
 } = require('./config/config');
 require('dotenv').config();
+const videoRouter = require('./routes/videoRoute');
 
 const app = express();
 
@@ -39,6 +40,9 @@ app.listen(port, () => {
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'successfull' });
 });
+
+// video route
+app.use('/api/v1/videos/', videoRouter);
 
 videoCronScheduler(); // cron schdeuler to fetch videos in background
 
