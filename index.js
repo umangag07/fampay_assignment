@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const videoCronScheduler = require('./utils/fetchYoutubeVideos');
 require('dotenv').config();
 
 const app = express();
@@ -16,3 +17,5 @@ app.listen(port, () => {
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'successfull' });
 });
+
+videoCronScheduler(); // cron schdeuler to fetch videos in background
