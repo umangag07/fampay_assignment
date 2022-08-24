@@ -52,7 +52,10 @@ const videoSchema = new mongoose.Schema(
     }
 );
 
-// creating text compound index on title and description
+// Text compound index on title and description
 videoSchema.index({ title: 'text', description: 'text' });
+
+// single field index on publishedAT
+videoSchema.index({ publishedAt: -1 });
 
 module.exports = mongoose.model('youtubeVideo', videoSchema);
