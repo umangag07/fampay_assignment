@@ -9,7 +9,7 @@ exports.getVideos = async (req, res, next) => {
                 : req.params.page === '0'
                 ? 1
                 : req.params.page;
-        let maxResponseLimit = req.query.limit || 10;
+        let maxResponseLimit = parseInt(req.query.limit) || 10;
         let startIndex = (pageNumber - 1) * maxResponseLimit;
         const totalPages = Math.ceil(
             (await videoModel.find()).length / maxResponseLimit
@@ -43,7 +43,7 @@ exports.searchVideos = async (req, res, next) => {
         // Getting the relevance search score for the matched result
         // Sorting based on the relevance search score
 
-        // const result = await videoModel
+        // let result = await videoModel
         //     .find(
         //         { $text: { $search: query_string } },
         //         { score: { $meta: 'textScore' } }
@@ -52,17 +52,32 @@ exports.searchVideos = async (req, res, next) => {
 
         // Searching based on the regular expression
 
-        const result = await videoModel.find({
+        let result = await videoModel.find({
             $or: [
                 { title: { $in: regexOfQueryString } },
                 { description: { $in: regexOfQueryString } },
             ],
         });
 
+        let pageNumber =
+            req.query.page == undefined
+                ? 1
+                : req.query.page === '0'
+                ? 1
+                : req.query.page;
+        let maxResponseLimit = parseInt(req.query.limit) || 10;
+        let startIndex = (pageNumber - 1) * maxResponseLimit;
+        let totalPages = Math.ceil(result.length / maxResponseLimit);
+
+        let slicedResult = result.slice(
+            startIndex,
+            startIndex + maxResponseLimit
+        );
         res.status(200).send({
             message: 'success',
-            totalResults: result.length,
-            data: result,
+            totalPages,
+            currentPage: pageNumber,
+            data: slicedResult,
         });
     } catch (err) {
         console.log(err);
