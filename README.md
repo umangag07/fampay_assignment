@@ -40,9 +40,13 @@ MONGO_DATABASE='FamPay
 ### 1. Running using Docker
 To run this project using docker use the following command: (Ensure docker is installed on the system).
 
+#### To start:
 ```
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d 
+```
+#### To stop:
+```
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml down
 ```
    * `docker-compose.yml` has bas configuration for running the container.
    * `docker-compose.dev.yml` has configuration for the development environment and it will override the necessary information for development environment.
