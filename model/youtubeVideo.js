@@ -52,4 +52,7 @@ const videoSchema = new mongoose.Schema(
     }
 );
 
+// creating text compound index on title and description
+videoSchema.index({ title: 'text', description: 'text' });
+
 module.exports = mongoose.model('youtubeVideo', videoSchema);
