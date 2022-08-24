@@ -1,0 +1,21 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2021": true
+  },
+  "extends": ["prettier", "eslint:recommended"],
+
+  "plugins": ["prettier"],
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-console": "off",
+    "object-shorthand": "off", // To turnoff using the shorthand syntax
+    "prettier/prettier": "error",
+    "no-undef": "off",
+    "tabWidth": 4
+  }
+}

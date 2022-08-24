@@ -1,0 +1,15 @@
+# Ignore artifacts:
+build
+coverage
+
+# Ignore all HTML files:
+*.html
+
+# Node modules
+node_modules/
+
+#package.json and lock file
+package*.json
+
+# Eslint files
+.eslintrc.json
