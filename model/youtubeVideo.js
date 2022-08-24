@@ -7,7 +7,7 @@ const videoSchema = new mongoose.Schema(
             type: String,
         },
         description: {
-            required: true,
+            type: String,
         },
         videoId: {
             required: true,
