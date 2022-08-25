@@ -1,5 +1,6 @@
 const googleApi = require('googleapis');
 const cron = require('node-cron');
+const youtubeVideoModel = require('../model/youtubeVideo');
 require('dotenv').config();
 
 let apiKey = process.env.YOUTUBE_API_KEYS.split(',');
@@ -18,18 +19,34 @@ const params = {
     q: 'football',
 };
 
-let videoFetchInterval = process.env.VIDEO_FETCH_INTERVAL;
+let videoFetchInterval = 3000; // Interval to run cron job in seconds
 let apiQuotaExceedErrorMessage =
     'The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.';
+
 module.exports = () => {
     cron.schedule(`*/${videoFetchInterval} * * * * *`, async () => {
         try {
             console.log('Cron running', new Date());
-            const result = await googleYoutubeApi.search.list(params);
-            const videos = result.data.items;
-            console.log(videos);
+            const results = await googleYoutubeApi.search.list(params);
+            let videos = results.data.items;
+            videos = videos.map((video) => ({
+                title: video.snippet.title,
+                description: video.snippet.description,
+                videoId: video.id.videoId,
+                channelId: video.snippet.channelId,
+                channelTitle: video.snippet.channelTitle,
+                publishedAt: video.snippet.publishedAt,
+                publishTime: video.snippet.publishTime,
+                thumbnails: {
+                    default: video.snippet.thumbnails.default,
+                    medium: video.snippet.thumbnails.medium,
+                    high: video.snippet.thumbnails.high,
+                },
+            }));
+            await youtubeVideoModel.create(videos);
         } catch (err) {
             // Refreshing the api key on quota exhaustion
+            console.log(err);
             if (
                 err.message === apiQuotaExceedErrorMessage &&
                 err.code === 403
