@@ -8,14 +8,22 @@ To make an API to fetch latest videos sorted in reverse chronological order of t
     * `/videos/get/{pageNumber}` Endpoint to fetch the videos in paginated format
     * `/videos/search/{query_string}` Endpoint to search the video based on query string for title & description 
     * More information on how to fetch data from APIs [here](#apis)
- 2. Fetch the youtube videos data every 30 seconds using the cron-scheduler.
+ 2. Fetch the youtube videos data every 30 seconds using the cron-scheduler. [Supports multiple api keys given in comma seperated value in .env file]
  3. Search query optimised for patial matches.<br> Example:  A video with title `How to make tea?` should match for the search query `tea how`.
- 4. Dasahboard to View the data.
+ 4. Dasahboard to view the data.
+ 
+ ## To access resources  
+ 
+ 1. Goto http://localhost:5000/ to view the dashboard.
+ 2. Goto http://localhost:8081/ to the UI for the MongoDb database (coming from mongo-express container)
+#### APIs
+1. `http://localhost:5000/api/v1/videos/get/3?limit=12` to retrieve the videos.
+2. `http://localhost:5000/api/v1/videos/search/football?page=1&limit=1` to search the video. 
 
 ## Getting started with the project
 
 1. Clone the repository by using the command: `https://github.com/umangag07/fampay_assignment.git`
-2. Next go inside the folder using: `cd fampay_assignment`.
+2. Change to project directory by using: `cd fampay_assignment`.
 3. Run command `npm install`.
 4. copy contents of `.env.example` to `.env` and change the varibales accordingly.
 ```
@@ -49,7 +57,7 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml down
 ```
-   * `docker-compose.yml` has bas configuration for running the container.
+   * `docker-compose.yml` has base configuration for running the container.
    * `docker-compose.dev.yml` has configuration for the development environment and it will override the necessary information for development environment.
    * `docker-compose.prod.yml`  has configuration for the production environment and can use it by making necessary changes for prod environment.
 
@@ -61,10 +69,6 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml down
 > * To successfully run the project locally make the mongoDb database and provide the correct values for environment variable.
 > * Preferably run in docker env it will setup all the things for you.
     
- ## To access resources  
- 
- 1. Goto http://localhost:5000/ it will return json response with successfull message.
- 2. Goto http://localhost:8081/ to the UI for the MongoDb database (coming from mongo-express container)
 
 
 ## <a name="apis"></a>Backend APIs
@@ -207,3 +211,6 @@ http://localhost:5000/api/v1/videos/search/football?page=1&limit=1
 <pre>
 </details>
     
+## MongoDb Indexing resources.
+1. https://www.digitalocean.com/community/tutorials/how-to-use-indexes-in-mongodb
+2. https://www.digitalocean.com/community/tutorials/how-to-perform-full-text-search-in-mongodb 
