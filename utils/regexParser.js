@@ -2,7 +2,6 @@
 // Example [/best/i,/kickoffs/i]
 
 module.exports = (str) => {
-    console.log('Regexparser', str);
     str = str.split(' ');
     let regexWordArray = str.map((word) => {
         let re = new RegExp(word, 'i');

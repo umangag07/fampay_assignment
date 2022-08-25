@@ -1,17 +1,14 @@
 const videoModel = require('../model/youtubeVideo');
 const regexParser = require('../utils/regexParser');
+const getPaginationData = require('../utils/paginationData');
+
 exports.getVideos = async (req, res, next) => {
     try {
         // pageNumber by default will be 1 if not given and for 0 as well.
-        let pageNumber =
-            req.params.page == undefined
-                ? 1
-                : req.params.page === '0'
-                ? 1
-                : parseInt(req.params.page);
-
-        let maxResponseLimit = parseInt(req.query.limit) || 10;
-        let startIndex = (pageNumber - 1) * maxResponseLimit;
+        let { pageNumber, maxResponseLimit, startIndex } = getPaginationData(
+            req.params.page,
+            req.query.limit
+        );
         const totalPages = Math.ceil(
             (await videoModel.find()).length / maxResponseLimit
         );
@@ -53,7 +50,7 @@ exports.searchVideos = async (req, res, next) => {
             //     )
             //     .sort({ score: { $meta: 'textScore' } });
 
-            // Searching based on the regular expression
+            // Searching based on the regular expression (other way to search using regex)
 
             let result = await videoModel.find({
                 $or: [
@@ -61,15 +58,8 @@ exports.searchVideos = async (req, res, next) => {
                     { description: { $in: regexOfQueryString } },
                 ],
             });
-
-            let pageNumber =
-                req.query.page == undefined
-                    ? 1
-                    : req.query.page === '0'
-                    ? 1
-                    : parseInt(req.query.page);
-            let maxResponseLimit = parseInt(req.query.limit) || 10;
-            let startIndex = (pageNumber - 1) * maxResponseLimit;
+            let { pageNumber, maxResponseLimit, startIndex } =
+                getPaginationData(req.params.page, req.query.limit);
             let totalPages = Math.ceil(result.length / maxResponseLimit);
 
             let slicedResult = result.slice(
