@@ -9,27 +9,28 @@ let googleYoutubeApi = new googleApi.youtube_v3.Youtube({
     auth: apiKey.pop(),
 });
 
-const params = {
+// Params for fetching youtube video
+let params = {
     part: ['snippet'],
-    maxResults: 25,
+    maxResults: 50,
     type: ['video'],
     order: 'date',
-    publishedAfter: '2021-01-01T00:00:00Z',
+    publishedAfter: '2020-05-05T00:00:00Z',
     relevanceLanguage: 'en',
     q: 'football',
 };
 
-let videoFetchInterval = 3000; // Interval to run cron job in seconds
+let videoFetchInterval = 15; // Interval to run cron job in seconds
 let apiQuotaExceedErrorMessage =
     'The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.';
 
 module.exports = () => {
     cron.schedule(`*/${videoFetchInterval} * * * * *`, async () => {
         try {
-            console.log('Cron running', new Date());
             const results = await googleYoutubeApi.search.list(params);
-            let videos = results.data.items;
-            videos = videos.map((video) => ({
+            // To fetch the next page
+            params = { ...params, pageToken: results.data.nextPageToken };
+            let videos = results.data.items.map((video) => ({
                 title: video.snippet.title,
                 description: video.snippet.description,
                 videoId: video.id.videoId,
@@ -46,7 +47,7 @@ module.exports = () => {
             await youtubeVideoModel.create(videos);
         } catch (err) {
             // Refreshing the api key on quota exhaustion
-            console.log(err);
+            console.log(err.message);
             if (
                 err.message === apiQuotaExceedErrorMessage &&
                 err.code === 403
@@ -55,6 +56,7 @@ module.exports = () => {
                     googleYoutubeApi = new googleApi.youtube_v3.Youtube({
                         auth: apiKey.pop(),
                     });
+                    console.log('Key is refreshed');
                 } else {
                     console.log('Quota is finished for all the api keys.');
                 }

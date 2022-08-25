@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const mongoose = require('mongoose');
 const videoCronScheduler = require('./utils/fetchYoutubeVideos');
 const {
@@ -37,13 +38,15 @@ app.listen(port, () => {
     console.log('App started on port', port);
 });
 
-app.get('/', (req, res) => {
-    res.status(200).json({ message: 'successfull' });
-});
+videoCronScheduler(); // cron schdeuler to fetch videos in background
 
-// video route
+// Api route
 app.use('/api/v1/videos/', videoRouter);
 
-videoCronScheduler(); // cron schdeuler to fetch videos in background
+// Dashbaord route
+app.use(express.static(path.join(__dirname, 'view')));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'view', 'index.html'));
+});
 
 module.exports = app;
