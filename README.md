@@ -16,7 +16,8 @@ To make an API to fetch latest videos sorted in reverse chronological order of t
 
 1. Clone the repository by using the command: `https://github.com/umangag07/fampay_assignment.git`
 2. Next go inside the folder using: `cd fampay_assignment`.
-3. copy contents of `.env.example` to `.env` and change the varibales accordingly.
+3. Run command `npm install`.
+4. copy contents of `.env.example` to `.env` and change the varibales accordingly.
 ```
 .env.example
 
@@ -33,7 +34,7 @@ MONGO_HOST='mongo'
 MONGO_DATABASE='FamPay
 
 ```
-4. To obtain API keys check this link:  https://developers.google.com/youtube/v3/getting-started 
+5. To obtain API keys check this link:  https://developers.google.com/youtube/v3/getting-started 
 
 ## How to run 
 
